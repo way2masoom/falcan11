@@ -302,7 +302,7 @@ function promptConfirmExchange() {
   const userDisplay = handle.startsWith('@') ? handle : `@${handle}`;
 
   if (el('m2ConfirmText')) {
-    el('m2ConfirmText').textContent = `${sym(usdVal)} will be deducted from LIVE rewards balance and sent to ${userDisplay}`;
+    el('m2ConfirmText').innerHTML = `<strong style="font-weight:700;color:#161823;">${sym(usdVal)}</strong> will be deducted from LIVE rewards balance and sent to <strong style="font-weight:700;color:#161823;">${userDisplay}</strong>`;
   }
 
   const modal = el('m2ConfirmOverlay');
