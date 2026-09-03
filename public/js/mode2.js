@@ -173,6 +173,7 @@ function selectPreset(coins) {
   if (el('m2AmountText')) {
     el('m2AmountText').textContent = `${nfmt(state.m2Coins)} Coins`;
     el('m2AmountText').style.color = '#161823';
+    el('m2AmountText').style.fontWeight = '800';
   }
 }
 
@@ -335,7 +336,8 @@ function resetExchangeForm() {
   document.querySelectorAll('.m2-coin-card').forEach(c => c.classList.remove('selected'));
   if (el('m2AmountText')) {
     el('m2AmountText').textContent = 'Enter a custom number or amount';
-    el('m2AmountText').style.color = '#9CA3AF';
+    el('m2AmountText').style.color = '#73757C';
+    el('m2AmountText').style.fontWeight = '700';
   }
 }
 
@@ -461,6 +463,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (el('m2AmountText')) {
         el('m2AmountText').textContent = `${nfmt(coins)} Coins`;
         el('m2AmountText').style.color = '#161823';
+        el('m2AmountText').style.fontWeight = '800';
       }
       closeKeypadSheet();
       promptConfirmExchange();
