@@ -26,3 +26,4 @@ The app will be live at `http://localhost:3000`.
 
 ## 🌐 Deployment
 This project is configured for instant 1-click deployment on **Vercel**, **Render**, or **Railway**.
+# falcan69
