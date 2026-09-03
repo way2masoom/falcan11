@@ -151,6 +151,18 @@ function showM2Notif() {
 }
 
 /* Exchange Screen (Screenshot 2) */
+function updatePresetPrices() {
+  document.querySelectorAll('.m2-coin-card').forEach(btn => {
+    const coins = Number(btn.dataset.coins);
+    if (!coins) return;
+    const usd = coinsToUsd(coins);
+    const priceEl = btn.querySelector('.m2-coin-price');
+    if (priceEl) {
+      priceEl.textContent = sym(usd);
+    }
+  });
+}
+
 function openExchangePage() {
   const avail = m2AvailUSD();
   const coins = usdToCoins(avail);
@@ -160,6 +172,7 @@ function openExchangePage() {
   if (el('m2ExBalanceCoins')) el('m2ExBalanceCoins').textContent = nfmt(coins);
 
   resetExchangeForm();
+  updatePresetPrices();
 
   showM2Page('m2ExchangePage');
 }

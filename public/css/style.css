@@ -232,9 +232,9 @@ body {
 .m2-coin-card {
   background: #FFFFFF !important;
   border: 1.5px solid #F0F2F5 !important;
-  border-radius: 16px !important;
-  padding: 12px 6px !important;
-  min-height: 72px !important;
+  border-radius: 14px !important;
+  padding: 8px 4px !important;
+  min-height: 60px !important;
   text-align: center !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
