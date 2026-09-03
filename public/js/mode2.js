@@ -159,10 +159,7 @@ function openExchangePage() {
   if (el('m2ExBalanceApprox')) el('m2ExBalanceApprox').textContent = sym(avail);
   if (el('m2ExBalanceCoins')) el('m2ExBalanceCoins').textContent = nfmt(coins);
 
-  // Reset inputs
-  state.m2Coins = 0;
-  if (el('m2AmountText')) el('m2AmountText').textContent = 'Enter a custom number or amount';
-  document.querySelectorAll('.m2-coin-card').forEach(c => c.classList.remove('selected'));
+  resetExchangeForm();
 
   showM2Page('m2ExchangePage');
 }
@@ -317,6 +314,31 @@ function hideConfirmModal() {
   if (modal) modal.classList.remove('open');
 }
 
+/* Reset Exchange Form */
+function resetExchangeForm() {
+  state.m2Coins = 0;
+  state.m2Profile = null;
+  lastLoadedHandle = '';
+
+  const usernameInput = el('m2Username');
+  if (usernameInput) usernameInput.value = '';
+
+  const card = el('m2ProfileCard');
+  if (card) card.classList.add('hidden');
+
+  const clearBtn = el('m2ClearUsernameBtn');
+  if (clearBtn) clearBtn.classList.add('hidden');
+
+  const loader = el('m2SearchLoader');
+  if (loader) loader.classList.add('hidden');
+
+  document.querySelectorAll('.m2-coin-card').forEach(c => c.classList.remove('selected'));
+  if (el('m2AmountText')) {
+    el('m2AmountText').textContent = 'Enter a custom number or amount';
+    el('m2AmountText').style.color = '#9CA3AF';
+  }
+}
+
 async function executeExchange() {
   hideConfirmModal();
   closeKeypadSheet();
@@ -359,6 +381,9 @@ async function executeExchange() {
     if (el('m2gCoinsExchanged')) el('m2gCoinsExchanged').textContent = `${nfmt(coins)} Coins`;
     if (el('m2gDeducted')) el('m2gDeducted').textContent = sym(usd);
     if (el('m2gTime')) el('m2gTime').textContent = dateStr;
+
+    // Reset Exchange Form so username & preview are cleared for the next exchange
+    resetExchangeForm();
 
     showM2Page('m2CompletePageGreen');
   }, dur);
