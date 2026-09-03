@@ -598,8 +598,14 @@ body {
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
 /* Clean Inputs without Blue Focus Outline or Box Ring */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 input, button, select, textarea {
   outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
   -webkit-tap-highlight-color: transparent !important;
   box-shadow: none !important;
 }
@@ -608,25 +614,41 @@ input:focus,
 input:focus-visible,
 input:active {
   outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
   box-shadow: none !important;
+  border-color: transparent !important;
 }
 
 .username-input-wrap {
   background: #F8F9FA !important;
-  border: 1px solid #EFEFEF !important;
+  border: 1.5px solid #F0F2F5 !important;
   border-radius: 16px !important;
-  padding: 0 16px !important;
+  padding: 0 14px !important;
   height: 52px !important;
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  transition: background 0.2s ease, border-color 0.2s ease !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
 }
 
-.username-input-wrap:focus-within {
+.username-input-wrap:focus-within,
+.username-input-wrap:hover {
   background: #FFFFFF !important;
-  border-color: #E2E4E8 !important;
+  border-color: #FE2C55 !important;
+  box-shadow: 0 0 0 2px rgba(254, 44, 85, 0.22) !important;
+}
+
+.username-input-wrap input {
+  border: none !important;
+  outline: none !important;
   box-shadow: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  color: #161823 !important;
 }
 
 .tiktok-profile-card {

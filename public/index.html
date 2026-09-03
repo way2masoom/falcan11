@@ -201,8 +201,9 @@
         <!-- TikTok Username Input -->
         <div>
           <div class="text-sm font-bold text-black mb-2" style="font-size:14px;font-weight:700;color:#161823;">TikTok username</div>
-          <div class="username-input-wrap" id="m2UsernameWrap" style="background:#F8F9FA;border:1px solid #EFEFEF;border-radius:16px;padding:0 16px;height:52px;display:flex;align-items:center;gap:10px;transition:all 0.2s ease;">
-            <input class="w-full text-base font-bold text-black bg-transparent outline-none" id="m2Username" placeholder="Enter TikTok username" autocomplete="off" style="border:none;outline:none;box-shadow:none;height:100%;font-size:16px;font-weight:700;color:#161823;">
+          <div class="username-input-wrap" id="m2UsernameWrap">
+            <span style="font-size:16px;color:#8A8B91;font-weight:700;margin-right:2px;flex-shrink:0;">@</span>
+            <input class="w-full text-base font-bold text-black bg-transparent outline-none" id="m2Username" placeholder="your TikTok handle" autocomplete="off" style="border:none;outline:none;box-shadow:none;height:100%;font-size:15.5px;font-weight:700;color:#161823;">
             <button id="m2ClearUsernameBtn" type="button" class="hidden" style="width:24px;height:24px;border-radius:50%;background:#E2E4E8;border:none;display:flex;align-items:center;justify-content:center;color:#64748B;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
           </div>
         </div>
@@ -213,7 +214,7 @@
         </div>
 
         <!-- Profile lookup card (Screenshot 2 Format) -->
-        <div class="tiktok-profile-card hidden" id="m2ProfileCard" style="background:#FFFFFF;border:1px solid #F0F0F0;border-radius:18px;padding:14px 16px;box-shadow:0 4px 16px rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s ease;">
+        <div class="tiktok-profile-card hidden" id="m2ProfileCard" style="background:#FFFFFF;border:1px solid #F0F0F0;border-radius:18px;padding:14px 16px;box-shadow:0 4px 16px rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s ease;margin-top:6px;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
             <img id="m2ProfileAvatar" src="/assets/tiktok-logo.webp" alt="avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#111;border:1px solid rgba(0,0,0,0.06);" onerror="this.src='/assets/tiktok-logo.webp'">
             <div style="flex:1;min-width:0;">
@@ -231,11 +232,11 @@
         </div>
 
         <!-- Exchange Earnings for Coins -->
-        <div>
-          <div class="text-sm font-bold text-black mb-2">Exchange earnings for Coins</div>
+        <div style="margin-top:16px;">
+          <div class="text-sm font-bold text-black mb-3" style="font-size:14.5px;font-weight:800;color:#161823;">Exchange earnings for Coins</div>
           
           <!-- Preset Coins Grid (Screenshot 2: 250, 500, 15,000) -->
-          <div class="grid grid-cols-3 gap-3" id="m2Presets">
+          <div class="grid grid-cols-3 gap-3" id="m2Presets" style="margin-bottom:14px;">
             <button type="button" class="m2-coin-card" data-coins="250">
               <div class="flex items-center justify-center gap-1 font-bold text-black text-base">
                 <span class="m2-coin"></span><span>250</span>
@@ -257,14 +258,14 @@
           </div>
 
           <!-- Custom Number / Amount Trigger Box -->
-          <button type="button" class="w-full text-center bg-gray-50 rounded-xl p-4 mt-3" id="m2AmountField" style="border:1px solid #EFEFEF;cursor:pointer;">
+          <button type="button" class="w-full text-center bg-gray-50 rounded-xl p-4" id="m2AmountField" style="border:1px solid #EFEFEF;cursor:pointer;margin-bottom:14px;">
             <span id="m2AmountText" class="text-sm font-semibold text-gray-400">Enter a custom number or amount</span>
           </button>
-        </div>
 
-        <!-- Policy Disclaimer Card -->
-        <div class="bg-gray-50 rounded-xl p-4 text-xs text-gray-500 leading-relaxed" style="border:1px solid #EFEFEF;font-size:12px;line-height:1.55;">
-          Coins obtained through this exchange are subject to our <span class="font-bold text-black">Virtual Items Policy</span>. Since you are accepting your Rewards in the form of Coins, this exchange is also subject to our <span class="font-bold text-black">Rewards Policy</span>. This exchange cannot be canceled or reversed.
+          <!-- Policy Disclaimer Card -->
+          <div class="bg-gray-50 rounded-xl p-4 text-xs text-gray-500 leading-relaxed" style="border:1px solid #EFEFEF;font-size:12px;line-height:1.55;margin-bottom:28px;">
+            Coins obtained through this exchange are subject to our <span class="font-bold text-black">Virtual Items Policy</span>. Since you are accepting your Rewards in the form of Coins, this exchange is also subject to our <span class="font-bold text-black">Rewards Policy</span>. This exchange cannot be canceled or reversed.
+          </div>
         </div>
       </div>
 
