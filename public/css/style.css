@@ -231,9 +231,10 @@ body {
 /* Preset coin cards */
 .m2-coin-card {
   background: #FFFFFF;
-  border: 1.5px solid #E8EAED;
-  border-radius: 16px;
-  padding: 14px 6px;
+  border: 1.5px solid #F0F2F5;
+  border-radius: 20px;
+  padding: 18px 8px;
+  min-height: 82px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -241,6 +242,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .m2-coin-card:hover, .m2-coin-card.selected {
@@ -248,6 +250,16 @@ body {
   background: #FFF5F7;
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(254, 44, 85, 0.12);
+}
+
+.policy-card {
+  background: #F8F9FA;
+  border: 1px solid #F0F2F5;
+  border-radius: 20px;
+  padding: 18px 20px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #73757C;
 }
 
 /* Transactions list */
