@@ -597,26 +597,43 @@ body {
 .grid { display: grid; }
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
-.gap-2 { gap: 8px; }
-.gap-3 { gap: 12px; }
-.gap-4 { gap: 16px; }
+/* Clean Inputs without Blue Focus Outline or Box Ring */
+input, button, select, textarea {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  box-shadow: none !important;
+}
 
-/* Interactive Username Input & Card Hover */
-.username-input-wrap:focus-within,
-.username-input-wrap:hover {
-  border-color: #FE2C55 !important;
+input:focus,
+input:focus-visible,
+input:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.username-input-wrap {
+  background: #F8F9FA !important;
+  border: 1px solid #EFEFEF !important;
+  border-radius: 16px !important;
+  padding: 0 16px !important;
+  height: 52px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  transition: background 0.2s ease, border-color 0.2s ease !important;
+}
+
+.username-input-wrap:focus-within {
   background: #FFFFFF !important;
-  box-shadow: 0 0 0 3px rgba(254, 44, 85, 0.12) !important;
+  border-color: #E2E4E8 !important;
+  box-shadow: none !important;
 }
 
 .tiktok-profile-card {
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
 }
 
 .tiktok-profile-card:hover {
-  border-color: #FE2C55 !important;
-  box-shadow: 0 6px 24px rgba(254, 44, 85, 0.14) !important;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 

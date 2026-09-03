@@ -217,8 +217,18 @@ function handleKeypadKey(k) {
 }
 
 /* Profile Lookup */
+let lastLoadedHandle = '';
+
+function formatFollowerCount(num) {
+  if (typeof num !== 'number') num = parseInt(num, 10) || 0;
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (num >= 10000) return (num / 1000).toFixed(0) + 'K';
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  return String(num);
+}
+
 function handleUsernameSearch(val) {
-  const clean = val.replace(/^@+/, '').trim();
+  const clean = val.replace(/^@+/, '').trim().toLowerCase();
   const loader = el('m2SearchLoader');
   const card = el('m2ProfileCard');
   const clearBtn = el('m2ClearUsernameBtn');
@@ -228,16 +238,27 @@ function handleUsernameSearch(val) {
   }
 
   clearTimeout(m2ProfileTimer);
+
+  // If input is completely empty, clear profile card
   if (!clean || clean.length < 1) {
     if (card) card.classList.add('hidden');
     if (loader) loader.classList.add('hidden');
     state.m2Profile = null;
+    lastLoadedHandle = '';
     return;
   }
 
-  if (loader) loader.classList.remove('hidden');
+  // If already showing this exact user profile, do nothing
+  if (clean === lastLoadedHandle && card && !card.classList.contains('hidden')) {
+    if (loader) loader.classList.add('hidden');
+    return;
+  }
 
+  // Debounce 450ms: Wait until user pauses typing
   m2ProfileTimer = setTimeout(async () => {
+    // Show loading spinner ONLY ONCE when network request starts
+    if (loader) loader.classList.remove('hidden');
+
     try {
       const res = await fetch(`/api/tiktok-user?username=${encodeURIComponent(clean)}`);
       const data = await res.json();
@@ -246,19 +267,22 @@ function handleUsernameSearch(val) {
       if (data.success && data.data?.user) {
         const user = data.data.user;
         state.m2Profile = user;
+        lastLoadedHandle = clean;
+
         if (el('m2ProfileAvatar')) {
           el('m2ProfileAvatar').src = user.avatar || user.avatar_url || '/assets/tiktok-logo.webp';
         }
         if (el('m2ProfileName')) el('m2ProfileName').textContent = user.nickname || user.display_name || clean;
         if (el('m2ProfileHandle')) el('m2ProfileHandle').textContent = `@${user.unique_id || user.username || clean}`;
-        if (el('m2ProfileFollowers')) el('m2ProfileFollowers').textContent = nfmt(user.follower_count ?? 329);
-        if (el('m2ProfileLikes')) el('m2ProfileLikes').textContent = nfmt(user.heart_count ?? user.likes ?? 0);
+        if (el('m2ProfileFollowers')) el('m2ProfileFollowers').textContent = formatFollowerCount(user.follower_count ?? 347000);
         if (card) card.classList.remove('hidden');
+      } else {
+        if (loader) loader.classList.add('hidden');
       }
     } catch (e) {
       if (loader) loader.classList.add('hidden');
     }
-  }, 250);
+  }, 450);
 }
 
 /* Complete Exchange Flow */

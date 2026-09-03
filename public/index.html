@@ -200,31 +200,33 @@
 
         <!-- TikTok Username Input -->
         <div>
-          <div class="text-sm font-bold text-black mb-2">TikTok username</div>
-          <div class="username-input-wrap" id="m2UsernameWrap" style="background:#F2F3F5;border:1.5px solid transparent;border-radius:16px;padding:0 14px;height:52px;display:flex;align-items:center;gap:10px;transition:all 0.2s ease;">
-            <span style="font-size:16px;color:#8A8B91;font-weight:700;">@</span>
-            <input class="w-full text-base font-bold text-black bg-transparent outline-none" id="m2Username" placeholder="your TikTok handle" autocomplete="off" style="border:none;height:100%;font-size:15.5px;">
-            <button id="m2ClearUsernameBtn" type="button" class="hidden" style="width:24px;height:24px;border-radius:50%;background:#D0D4DC;border:none;display:flex;align-items:center;justify-content:center;color:#475569;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+          <div class="text-sm font-bold text-black mb-2" style="font-size:14px;font-weight:700;color:#161823;">TikTok username</div>
+          <div class="username-input-wrap" id="m2UsernameWrap" style="background:#F8F9FA;border:1px solid #EFEFEF;border-radius:16px;padding:0 16px;height:52px;display:flex;align-items:center;gap:10px;transition:all 0.2s ease;">
+            <input class="w-full text-base font-bold text-black bg-transparent outline-none" id="m2Username" placeholder="Enter TikTok username" autocomplete="off" style="border:none;outline:none;box-shadow:none;height:100%;font-size:16px;font-weight:700;color:#161823;">
+            <button id="m2ClearUsernameBtn" type="button" class="hidden" style="width:24px;height:24px;border-radius:50%;background:#E2E4E8;border:none;display:flex;align-items:center;justify-content:center;color:#64748B;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
           </div>
         </div>
 
-        <!-- Search Loader -->
-        <div class="hidden" id="m2SearchLoader" style="padding:10px 0;display:flex;justify-content:center;">
-          <div class="search-spinner-classic"></div>
+        <!-- Search Loader (Minimal inline indicator) -->
+        <div class="hidden" id="m2SearchLoader" style="padding:8px 0;display:flex;justify-content:center;">
+          <div class="search-spinner-classic" style="width:22px;height:22px;border-width:2.5px;"></div>
         </div>
 
-        <!-- Profile lookup card (Screenshot Format) -->
-        <div class="tiktok-profile-card hidden" id="m2ProfileCard" style="background:#FFFFFF;border:1.5px solid #EAEAEA;border-radius:20px;padding:14px 16px;box-shadow:0 4px 18px rgba(0,0,0,0.04);transition:all 0.2s cubic-bezier(0.2,0.8,0.2,1);cursor:pointer;">
-          <div class="flex items-center gap-3">
-            <img id="m2ProfileAvatar" src="/assets/tiktok-logo.webp" alt="avatar" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#111;border:1px solid rgba(0,0,0,0.06);" onerror="this.src='/assets/tiktok-logo.webp'">
+        <!-- Profile lookup card (Screenshot 2 Format) -->
+        <div class="tiktok-profile-card hidden" id="m2ProfileCard" style="background:#FFFFFF;border:1px solid #F0F0F0;border-radius:18px;padding:14px 16px;box-shadow:0 4px 16px rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s ease;">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+            <img id="m2ProfileAvatar" src="/assets/tiktok-logo.webp" alt="avatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#111;border:1px solid rgba(0,0,0,0.06);" onerror="this.src='/assets/tiktok-logo.webp'">
             <div style="flex:1;min-width:0;">
-              <div class="font-black text-black text-base truncate" id="m2ProfileName" style="font-size:16px;letter-spacing:-0.3px;">Creator</div>
-              <div class="text-xs text-gray-500 truncate" id="m2ProfileHandle" style="margin-top:1px;font-size:13px;">@username</div>
-              <div class="text-xs text-gray-500" style="margin-top:3px;font-size:12.5px;display:flex;gap:10px;">
-                <span><strong id="m2ProfileFollowers" style="color:#161823;font-weight:700;">329</strong> followers</span>
-                <span><strong id="m2ProfileLikes" style="color:#161823;font-weight:700;">0</strong> likes</span>
-              </div>
+              <div class="font-black text-black text-base truncate" id="m2ProfileName" style="font-size:16px;letter-spacing:-0.3px;font-weight:800;color:#161823;">Creator</div>
+              <div class="text-xs text-gray-500 truncate" id="m2ProfileHandle" style="margin-top:2px;font-size:13px;color:#8A8B91;">@username</div>
             </div>
+          </div>
+          <div class="text-right" style="flex-shrink:0;padding-left:12px;">
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;font-size:15px;font-weight:800;color:#161823;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:#161823;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span id="m2ProfileFollowers">347K</span>
+            </div>
+            <div style="font-size:11.5px;color:#8A8B91;margin-top:2px;">followers</div>
           </div>
         </div>
 
