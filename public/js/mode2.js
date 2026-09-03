@@ -257,6 +257,9 @@ function handleUsernameSearch(val) {
   // Debounce 450ms: Wait until user pauses typing
   m2ProfileTimer = setTimeout(async () => {
     // Show loading spinner ONLY ONCE when network request starts
+    if (el('m2SearchLabel')) {
+      el('m2SearchLabel').textContent = `Searching @${clean}...`;
+    }
     if (loader) loader.classList.remove('hidden');
 
     try {
