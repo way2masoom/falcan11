@@ -239,7 +239,7 @@
           <div style="margin-top:6px;">
             <div class="text-black" style="font-size:15px;font-weight:800;color:#161823;letter-spacing:-0.2px;margin-bottom:8px;">Exchange earnings for Coins</div>
             
-            <!-- Preset Coins Grid (Row 1: 250, 500, 15,000 | Row 2: 5,000, 10,000, 20,000) -->
+            <!-- Preset Coins Grid (Row 1: 250, 500, 15,000 | Row 2: 5,000, 10,000, Custom) -->
             <div class="grid grid-cols-3 gap-1.5" id="m2Presets" style="margin-bottom:6px;gap:6px;">
               <button type="button" class="m2-coin-card" data-coins="250" style="padding:8px 3px;min-height:54px;border-radius:12px;background:#FFFFFF;border:1.5px solid #F0F2F5;">
                 <div class="flex items-center justify-center gap-1 font-bold text-black" style="font-size:14.5px;">
@@ -271,17 +271,31 @@
                 </div>
                 <div class="m2-coin-price text-gray-500" style="font-size:11px;margin-top:1px;">$121.36</div>
               </button>
-              <button type="button" class="m2-coin-card" data-coins="20000" style="padding:8px 3px;min-height:54px;border-radius:12px;background:#FFFFFF;border:1.5px solid #F0F2F5;">
-                <div class="flex items-center justify-center gap-1 font-bold text-black" style="font-size:14.5px;">
-                  <span class="m2-coin" style="width:13px;height:13px;"></span><span>20,000</span>
+              <button type="button" class="m2-coin-card" id="m2CustomAmountCard" style="padding:8px 3px;min-height:54px;border-radius:12px;background:#FFFFFF;border:1.5px solid #F0F2F5;">
+                <div class="flex items-center justify-center gap-1 font-bold text-black" id="m2CustomCardTitle" style="font-size:14.5px;font-weight:700;">
+                  <span class="m2-coin" style="width:13px;height:13px;"></span><span>Custom</span>
                 </div>
-                <div class="m2-coin-price text-gray-500" style="font-size:11px;margin-top:1px;">$242.72</div>
+                <div class="m2-coin-price text-gray-500" id="m2CustomCardSub" style="font-size:11px;margin-top:1px;">Large amount</div>
               </button>
             </div>
 
-            <!-- Custom Number / Amount Trigger Box -->
-            <button type="button" class="w-full text-center rounded-xl" id="m2AmountField" style="border:1.5px solid #F0F2F5;cursor:pointer;margin-bottom:6px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#FFFFFF !important;box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-              <span id="m2AmountText" style="font-size:14px;font-weight:700;color:#161823;">Enter a custom number or amount</span>
+            <!-- Custom / Selected Coin Display Box (Matching Reference Screenshots) -->
+            <button type="button" class="w-full text-left" id="m2AmountField" style="border:1.5px solid #F0F2F5;cursor:pointer;margin-bottom:8px;min-height:54px;padding:8px 14px;border-radius:14px;background:#F8F9FA;box-shadow:0 2px 8px rgba(0,0,0,0.02);display:flex;align-items:center;transition:all 0.2s ease;">
+              <!-- Empty State: Clean Placeholder -->
+              <div id="m2AmountPlaceholder" style="font-size:14px;font-weight:500;color:#8A8B91;width:100%;text-align:left;">
+                Enter a custom number or amount
+              </div>
+              <!-- Selected State: Label on top, [Coin icon] Amount on left, ≈ $USD on right -->
+              <div id="m2AmountDetails" class="hidden" style="width:100%;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:2px;">
+                <div style="font-size:11.5px;color:#8A8B91;font-weight:500;letter-spacing:-0.1px;">Enter a custom number or amount</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                  <div style="display:flex;align-items:center;gap:6px;font-size:16px;font-weight:800;color:#161823;">
+                    <span class="m2-coin" style="width:15px;height:15px;"></span>
+                    <span id="m2SelectedCoins">0</span>
+                  </div>
+                  <div id="m2SelectedUSD" style="font-size:13.5px;font-weight:500;color:#8A8B91;">≈ $0.00</div>
+                </div>
+              </div>
             </button>
 
             <!-- Policy Disclaimer Card -->

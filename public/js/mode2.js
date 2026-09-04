@@ -177,17 +177,36 @@ function openExchangePage() {
   showM2Page('m2ExchangePage');
 }
 
+function updateSelectedAmountDisplay(coins) {
+  const placeholder = el('m2AmountPlaceholder');
+  const details = el('m2AmountDetails');
+  const coinsEl = el('m2SelectedCoins');
+  const usdEl = el('m2SelectedUSD');
+
+  if (!coins || coins <= 0) {
+    if (placeholder) placeholder.classList.remove('hidden');
+    if (details) details.classList.add('hidden');
+  } else {
+    if (placeholder) placeholder.classList.add('hidden');
+    if (details) details.classList.remove('hidden');
+    if (coinsEl) coinsEl.textContent = nfmt(coins);
+    if (usdEl) usdEl.textContent = `≈ ${sym(coinsToUsd(coins))}`;
+  }
+}
+
 /* Presets */
 function selectPreset(coins) {
   state.m2Coins = Number(coins);
   document.querySelectorAll('.m2-coin-card').forEach(c => {
     c.classList.toggle('selected', Number(c.dataset.coins) === state.m2Coins);
   });
-  if (el('m2AmountText')) {
-    el('m2AmountText').textContent = `${nfmt(state.m2Coins)} Coins`;
-    el('m2AmountText').style.color = '#161823';
-    el('m2AmountText').style.fontWeight = '800';
+  const customCard = el('m2CustomAmountCard');
+  if (customCard) {
+    customCard.classList.remove('selected');
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = '<span class="m2-coin" style="width:13px;height:13px;"></span><span>Custom</span>';
+    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = 'Large amount';
   }
+  updateSelectedAmountDisplay(state.m2Coins);
 }
 
 /* Keypad Modal */
@@ -304,11 +323,9 @@ function promptConfirmExchange() {
   const usernameInput = el('m2Username');
   const handle = usernameInput ? usernameInput.value.trim() : '';
   if (!handle) {
-    alert('Please enter a valid TikTok username');
     return;
   }
   if (!state.m2Coins || state.m2Coins <= 0) {
-    alert('Please select or enter coins to exchange');
     return;
   }
 
@@ -347,11 +364,13 @@ function resetExchangeForm() {
   if (loader) loader.classList.add('hidden');
 
   document.querySelectorAll('.m2-coin-card').forEach(c => c.classList.remove('selected'));
-  if (el('m2AmountText')) {
-    el('m2AmountText').textContent = 'Enter a custom number or amount';
-    el('m2AmountText').style.color = '#73757C';
-    el('m2AmountText').style.fontWeight = '700';
+  const customCard = el('m2CustomAmountCard');
+  if (customCard) {
+    customCard.classList.remove('selected');
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = '<span class="m2-coin" style="width:13px;height:13px;"></span><span>Custom</span>';
+    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = 'Large amount';
   }
+  updateSelectedAmountDisplay(0);
 }
 
 async function executeExchange() {
@@ -433,11 +452,15 @@ window.addEventListener('DOMContentLoaded', () => {
   if (greenBack) greenBack.addEventListener('click', returnFromExchangeDone);
 
   // Presets
-  document.querySelectorAll('.m2-coin-card').forEach(btn => {
+  document.querySelectorAll('.m2-coin-card[data-coins]').forEach(btn => {
     btn.addEventListener('click', () => selectPreset(btn.dataset.coins));
   });
 
-  // Custom Amount Keypad
+  // Custom Amount Card in Grid
+  const customAmountCard = el('m2CustomAmountCard');
+  if (customAmountCard) customAmountCard.addEventListener('click', openKeypadSheet);
+
+  // Custom Amount Field Trigger (below presets)
   const amountField = el('m2AmountField');
   if (amountField) amountField.addEventListener('click', openKeypadSheet);
 
@@ -469,15 +492,15 @@ window.addEventListener('DOMContentLoaded', () => {
     keypadExchangeBtn.addEventListener('click', () => {
       const coins = parseInt(m2KeypadStr, 10) || 0;
       if (coins <= 0) {
-        alert('Please enter a valid coin amount');
         return;
       }
       state.m2Coins = coins;
-      if (el('m2AmountText')) {
-        el('m2AmountText').textContent = `${nfmt(coins)} Coins`;
-        el('m2AmountText').style.color = '#161823';
-        el('m2AmountText').style.fontWeight = '800';
+      document.querySelectorAll('.m2-coin-card').forEach(c => c.classList.remove('selected'));
+      const customCard = el('m2CustomAmountCard');
+      if (customCard) {
+        customCard.classList.add('selected');
       }
+      updateSelectedAmountDisplay(coins);
       closeKeypadSheet();
       promptConfirmExchange();
     });
