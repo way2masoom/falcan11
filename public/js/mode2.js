@@ -1,5 +1,5 @@
 /* ============================================================
-   MODE 2 — TikTok LIVE Rewards & Coin Exchanger (Screenshots 1, 2, 3)
+   MODE 2 — TikTok LIVE Rewards & Coin Exchanger
    ============================================================ */
 
 const M2_COIN_USD = 0.012136; // 250=$3.03, 500=$6.07, 15000=$182.04
@@ -10,8 +10,8 @@ let m2SelectedMode = '2';
 let m2BalanceAnim = null;
 let m2NotifTimer = null;
 
-function usdToCoins(usd) {
-  return Math.floor(Math.max(0, usd) / M2_COIN_USD);
+function usdToCoins(amount) {
+  return Math.floor(Math.max(0, amount) / M2_COIN_USD);
 }
 
 function coinsToUsd(coins) {
@@ -20,14 +20,6 @@ function coinsToUsd(coins) {
 
 function m2AvailUSD() {
   return Math.max(0, (settings.availableRewards || 0) - (state.totals.out || 0));
-}
-
-function sym(v) {
-  return getCurrencySymbol() + toMoney(v);
-}
-
-function nfmt(n) {
-  return Number(n || 0).toLocaleString('en-US');
 }
 
 /* Page Navigation */
@@ -47,6 +39,7 @@ function showM2Page(id) {
 function applyWalletMode(mode) {
   m2SelectedMode = mode || '2';
   localStorage.setItem('walletMode', m2SelectedMode);
+  applyTranslations();
   renderM2Rewards();
   renderM2Transactions();
   showM2Page('m2RewardsPage');
@@ -54,10 +47,23 @@ function applyWalletMode(mode) {
 
 /* LIVE Rewards Dashboard Rendering */
 function setM2Balance(v) {
-  const parts = toMoney(v).split('.');
+  const formatted = toMoney(v);
+  
+  // Find last separator (dot or comma) to split whole and cents correctly for all locales
+  const lastDot = formatted.lastIndexOf('.');
+  const lastComma = formatted.lastIndexOf(',');
+  const decIdx = Math.max(lastDot, lastComma);
+
+  let whole = formatted;
+  let cents = '.00';
+  if (decIdx !== -1 && decIdx >= formatted.length - 4) {
+    whole = formatted.substring(0, decIdx);
+    cents = formatted.substring(decIdx); // includes the separator (. or ,)
+  }
+
   if (el('m2BalCurrency')) el('m2BalCurrency').textContent = getCurrencyPrefix();
-  if (el('m2BalWhole')) el('m2BalWhole').textContent = parts[0];
-  if (el('m2BalCents')) el('m2BalCents').textContent = '.' + (parts[1] || '00');
+  if (el('m2BalWhole')) el('m2BalWhole').textContent = whole;
+  if (el('m2BalCents')) el('m2BalCents').textContent = cents;
   if (el('m2BalSubLine')) {
     const coins = usdToCoins(v);
     el('m2BalSubLine').innerHTML =
@@ -70,9 +76,27 @@ function renderM2Rewards() {
   setM2Balance(avail);
   if (el('m2AvailAmtTab')) el('m2AvailAmtTab').textContent = sym(avail);
   if (el('m2UpcomingAmtTab')) el('m2UpcomingAmtTab').textContent = sym(settings.upcomingRewards || 0);
-  const s = getCurrencySymbol();
-  if (el('m2DailyLimit')) el('m2DailyLimit').textContent = `${s}1000/${s}1000`;
-  if (el('m2TxIn')) el('m2TxIn').textContent = `${getCurrencyPrefix()}0.46`;
+  if (el('m2DailyLimit')) el('m2DailyLimit').textContent = `${sym(1000)}/${sym(1000)}`;
+  if (el('m2TxIn')) el('m2TxIn').textContent = `${sym(0.46)}`;
+
+  // Localized Month Header in Transactions
+  const d = new Date();
+  const lang = getLanguage();
+  const monthName = translations[lang]?.months[d.getMonth()] || 'Jun';
+  const year = d.getFullYear();
+  if (el('m2TxMonth')) {
+    el('m2TxMonth').textContent = t('monthFormat', { month: monthName, year: year });
+  }
+}
+
+function getTxDisplayName(tx) {
+  if (tx.nameKey === 'txSentCoins') {
+    return t('txSentCoins', { coins: nfmt(tx.coins || 250), user: tx.recipient || '@user' });
+  }
+  if (tx.nameKey === 'txLivePayout') {
+    return t('txLivePayout');
+  }
+  return tx.name || '';
 }
 
 function renderM2Transactions() {
@@ -80,13 +104,15 @@ function renderM2Transactions() {
   if (!list) return;
   list.innerHTML = '';
 
-  state.transactions.forEach((tx, index) => {
+  state.transactions.forEach((tx) => {
     const row = document.createElement('div');
     row.className = 'tx-row';
     const isPositive = tx.isPositive || tx.type === 'in';
+    const displayName = getTxDisplayName(tx);
+
     row.innerHTML = `
       <div style="flex:1;">
-        <div class="tx-name">${tx.name}</div>
+        <div class="tx-name">${displayName}</div>
         <div class="tx-date">${tx.date}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
@@ -100,11 +126,12 @@ function renderM2Transactions() {
 }
 
 function openStatementForTx(tx) {
+  const userText = tx.recipient || '@user';
   if (el('m2sCoinsTop')) el('m2sCoinsTop').textContent = nfmt(tx.coins || 250);
-  if (el('m2sTopUser')) el('m2sTopUser').textContent = tx.recipient || '@user';
-  if (el('m2sRecipient')) el('m2sRecipient').textContent = tx.recipient || '@user';
-  if (el('m2sCoinsExchanged')) el('m2sCoinsExchanged').textContent = `${nfmt(tx.coins || 250)} Coins`;
-  if (el('m2sDeducted')) el('m2sDeducted').textContent = tx.amount || '-$3.03';
+  if (el('m2sTopUserLine')) el('m2sTopUserLine').innerHTML = t('sentToUser', { user: `<span class="font-bold text-black" id="m2sTopUser">${userText}</span>` });
+  if (el('m2sRecipient')) el('m2sRecipient').textContent = userText;
+  if (el('m2sCoinsExchanged')) el('m2sCoinsExchanged').textContent = `${nfmt(tx.coins || 250)} ${t('coinsUnit')}`;
+  if (el('m2sDeducted')) el('m2sDeducted').textContent = tx.amount || `-${sym(3.03)}`;
   if (el('m2sTime')) el('m2sTime').textContent = tx.date || formatDate();
   showM2Page('m2StatementPage');
 }
@@ -150,7 +177,7 @@ function showM2Notif() {
   }, 2800);
 }
 
-/* Exchange Screen (Screenshot 2) */
+/* Exchange Screen */
 function updatePresetPrices() {
   document.querySelectorAll('.m2-coin-card').forEach(btn => {
     const coins = Number(btn.dataset.coins);
@@ -160,7 +187,19 @@ function updatePresetPrices() {
     if (priceEl) {
       priceEl.textContent = sym(usd);
     }
+
+    // Update preset coin number formatting for current locale
+    const coinNumSpan = btn.querySelector('.font-bold > span:last-child');
+    if (coinNumSpan && btn.id !== 'm2CustomAmountCard') {
+      coinNumSpan.textContent = nfmt(coins);
+    }
   });
+
+  const customCard = el('m2CustomAmountCard');
+  if (customCard && !customCard.classList.contains('selected')) {
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
+  }
 }
 
 function openExchangePage() {
@@ -203,8 +242,8 @@ function selectPreset(coins) {
   const customCard = el('m2CustomAmountCard');
   if (customCard) {
     customCard.classList.remove('selected');
-    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = '<span class="m2-coin" style="width:13px;height:13px;"></span><span>Custom</span>';
-    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = 'Large amount';
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
   }
   updateSelectedAmountDisplay(state.m2Coins);
 }
@@ -249,14 +288,6 @@ function handleKeypadKey(k) {
 /* Profile Lookup */
 let lastLoadedHandle = '';
 
-function formatFollowerCount(num) {
-  if (typeof num !== 'number') num = parseInt(num, 10) || 0;
-  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (num >= 10000) return (num / 1000).toFixed(0) + 'K';
-  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  return String(num);
-}
-
 function handleUsernameSearch(val) {
   const clean = val.replace(/^@+/, '').trim().toLowerCase();
   const loader = el('m2SearchLoader');
@@ -269,7 +300,6 @@ function handleUsernameSearch(val) {
 
   clearTimeout(m2ProfileTimer);
 
-  // If input is completely empty, clear profile card
   if (!clean || clean.length < 1) {
     if (card) card.classList.add('hidden');
     if (loader) loader.classList.add('hidden');
@@ -278,17 +308,14 @@ function handleUsernameSearch(val) {
     return;
   }
 
-  // If already showing this exact user profile, do nothing
   if (clean === lastLoadedHandle && card && !card.classList.contains('hidden')) {
     if (loader) loader.classList.add('hidden');
     return;
   }
 
-  // Debounce 450ms: Wait until user pauses typing
   m2ProfileTimer = setTimeout(async () => {
-    // Show loading spinner ONLY ONCE when network request starts
     if (el('m2SearchLabel')) {
-      el('m2SearchLabel').textContent = `Searching @${clean}...`;
+      el('m2SearchLabel').textContent = t('searchingUser', { user: clean });
     }
     if (loader) loader.classList.remove('hidden');
 
@@ -333,7 +360,7 @@ function promptConfirmExchange() {
   const userDisplay = handle.startsWith('@') ? handle : `@${handle}`;
 
   if (el('m2ConfirmText')) {
-    el('m2ConfirmText').innerHTML = `<strong style="font-weight:700;color:#161823;">${sym(usdVal)}</strong> will be deducted from LIVE rewards balance and sent to <strong style="font-weight:700;color:#161823;">${userDisplay}</strong>`;
+    el('m2ConfirmText').innerHTML = t('confirmDeductMsg', { amount: sym(usdVal), user: userDisplay });
   }
 
   const modal = el('m2ConfirmOverlay');
@@ -367,8 +394,8 @@ function resetExchangeForm() {
   const customCard = el('m2CustomAmountCard');
   if (customCard) {
     customCard.classList.remove('selected');
-    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = '<span class="m2-coin" style="width:13px;height:13px;"></span><span>Custom</span>';
-    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = 'Large amount';
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
   }
   updateSelectedAmountDisplay(0);
 }
@@ -400,6 +427,7 @@ async function executeExchange() {
     // Record transaction
     const newTx = {
       name: `Sent ${nfmt(coins)} Coins to ${userDisplay}`,
+      nameKey: 'txSentCoins',
       amount: `-${sym(usd)}`,
       date: dateStr,
       type: 'out',
@@ -409,14 +437,14 @@ async function executeExchange() {
     state.transactions.unshift(newTx);
     renderM2Transactions();
 
-    // Render Green Receipt (Screenshot format)
+    // Render Green Receipt
     if (el('m2gCoins')) el('m2gCoins').textContent = nfmt(coins);
     if (el('m2gRecipient')) el('m2gRecipient').textContent = userDisplay;
-    if (el('m2gCoinsExchanged')) el('m2gCoinsExchanged').textContent = `${nfmt(coins)} Coins`;
+    if (el('m2gCoinsExchanged')) el('m2gCoinsExchanged').textContent = `${nfmt(coins)} ${t('coinsUnit')}`;
     if (el('m2gDeducted')) el('m2gDeducted').textContent = sym(usd);
     if (el('m2gTime')) el('m2gTime').textContent = dateStr;
 
-    // Reset Exchange Form so username & preview are cleared for the next exchange
+    // Reset Exchange Form
     resetExchangeForm();
 
     showM2Page('m2CompletePageGreen');

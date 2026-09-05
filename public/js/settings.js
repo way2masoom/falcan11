@@ -1,26 +1,20 @@
-/* ======== WALLET SETTINGS POPUP MODAL (SCREENSHOT) ======== */
+/* ======== WALLET SETTINGS POPUP MODAL ======== */
 
 function openWalletSettingsModal() {
   const modal = el('walletSettingsModal');
-  const userSpan = el('wsModalUser');
-  const timeSpan = el('wsModalTimeLeft');
   const input = el('walletSettingsAmountInput');
-
-  const currentUser = (state.user && state.user.username) || localStorage.getItem('tiktok_username') || 'raj';
-  if (userSpan) userSpan.textContent = `@${currentUser}`;
-
-  if (timeSpan) {
-    if (state.user && state.user.expiresAt) {
-      timeSpan.textContent = formatTimeLeft(state.user.expiresAt - Date.now()) + ' left';
-    } else {
-      timeSpan.textContent = '29 days 23 hours left';
-    }
-  }
+  const langSelect = el('walletSettingsLangSelect');
 
   const currentAvail = m2AvailUSD();
   if (input) {
     input.value = currentAvail.toFixed(2);
     setTimeout(() => { input.focus(); input.select(); }, 100);
+  }
+
+  // Synchronize language dropdown select
+  const curLang = getLanguage();
+  if (langSelect) {
+    langSelect.value = curLang;
   }
 
   if (modal) modal.classList.add('open');
@@ -66,7 +60,29 @@ function saveToolboxSettings() {
   closeToolbox();
 }
 
+function bindLanguageSelectors() {
+  const selects = ['walletSettingsLangSelect', 'toolboxLangSelect'];
+  selects.forEach(id => {
+    const selectEl = el(id);
+    if (!selectEl) return;
+    selectEl.addEventListener('change', (e) => {
+      const chosenLang = e.target.value;
+      if (chosenLang) {
+        setLanguage(chosenLang);
+        // Sync all other select elements
+        selects.forEach(otherId => {
+          const other = el(otherId);
+          if (other && other !== e.target) other.value = chosenLang;
+        });
+      }
+    });
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+  // Bind Language dropdowns
+  bindLanguageSelectors();
+
   const gearBtn = el('m2RewardsCloseBtn'); // gear button on top right of LIVE rewards
   if (gearBtn) gearBtn.addEventListener('click', openWalletSettingsModal);
 
@@ -106,6 +122,8 @@ window.addEventListener('DOMContentLoaded', () => {
         b.classList.remove('bg-red-500', 'text-white');
       });
       btn.classList.add('bg-red-500', 'text-white');
+      saveSettings(settings);
+      renderM2Rewards();
     });
   }
 
@@ -120,18 +138,7 @@ window.addEventListener('DOMContentLoaded', () => {
         b.classList.remove('bg-red-500', 'text-white');
       });
       btn.classList.add('bg-red-500', 'text-white');
-    });
-  }
-
-  // Mode Selector
-  const modeSelector = el('modeSelector');
-  if (modeSelector) {
-    modeSelector.addEventListener('click', (e) => {
-      const btn = e.target.closest('.mode-select-btn');
-      if (!btn) return;
-      modeSelector.querySelectorAll('.mode-select-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      localStorage.setItem('walletMode', btn.dataset.mode);
+      saveSettings(settings);
     });
   }
 });
