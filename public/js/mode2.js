@@ -197,7 +197,7 @@ function updatePresetPrices() {
 
   const customCard = el('m2CustomAmountCard');
   if (customCard && !customCard.classList.contains('selected')) {
-    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:12px;height:12px;"></span><span>${t('custom')}</span>`;
     if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
   }
 }
@@ -242,7 +242,7 @@ function selectPreset(coins) {
   const customCard = el('m2CustomAmountCard');
   if (customCard) {
     customCard.classList.remove('selected');
-    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:12px;height:12px;"></span><span>${t('custom')}</span>`;
     if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
   }
   updateSelectedAmountDisplay(state.m2Coins);
@@ -394,7 +394,7 @@ function resetExchangeForm() {
   const customCard = el('m2CustomAmountCard');
   if (customCard) {
     customCard.classList.remove('selected');
-    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:13px;height:13px;"></span><span>${t('custom')}</span>`;
+    if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:12px;height:12px;"></span><span>${t('custom')}</span>`;
     if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = t('largeAmount');
   }
   updateSelectedAmountDisplay(0);
@@ -527,6 +527,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const customCard = el('m2CustomAmountCard');
       if (customCard) {
         customCard.classList.add('selected');
+        if (el('m2CustomCardTitle')) el('m2CustomCardTitle').innerHTML = `<span class="m2-coin" style="width:12px;height:12px;"></span><span>${nfmt(coins)}</span>`;
+        if (el('m2CustomCardSub')) el('m2CustomCardSub').textContent = sym(coinsToUsd(coins));
       }
       updateSelectedAmountDisplay(coins);
       closeKeypadSheet();
