@@ -1,3 +1,4 @@
+.env
 node_modules
 .DS_Store
 *.log
@@ -9,3 +10,4 @@ LIVE Rewards — Exchange*
 LIVE Rewardsrr — Exchange*
 LIVE Rewarlastds — Exchange*
 LIVE aaa— Exchange*
+
